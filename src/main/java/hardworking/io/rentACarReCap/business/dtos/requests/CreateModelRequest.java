@@ -10,14 +10,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateBrandRequest {
+public class CreateModelRequest {
 	
 	@NotNull
 	@NotBlank
-	private int id;
+	@Size(min=3,max=20)
+	private String name;
+	
 	@NotNull
 	@NotBlank
-	@Size(min=3,max = 20)
-	private String name;
+	private int brandId;
 
 }
