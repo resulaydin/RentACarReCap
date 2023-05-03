@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 
 import hardworking.io.rentACarReCap.business.abstracts.BrandService;
 import hardworking.io.rentACarReCap.business.dtos.requests.CreateBrandRequest;
+import hardworking.io.rentACarReCap.business.dtos.requests.ProcessByIdBrandRequest;
+import hardworking.io.rentACarReCap.business.dtos.requests.UpdateBrandRequest;
 import hardworking.io.rentACarReCap.business.dtos.responses.GetAllBrandsResponse;
+import hardworking.io.rentACarReCap.business.dtos.responses.GetDefaultBrandResponse;
 import hardworking.io.rentACarReCap.core.utilities.mappers.ModelMapperService;
 import hardworking.io.rentACarReCap.dataAccess.abstracts.BrandRepository;
 import hardworking.io.rentACarReCap.entities.concretes.Brand;
@@ -42,6 +45,34 @@ public class BrandManager implements BrandService {
 	@Override
 	public void deleteById(int id) {
 		_brandBrandRepository.deleteById(id);
-		
+
+	}
+
+	@Override
+	public void update(UpdateBrandRequest updateBrandRequest) {
+
+		Brand brand = _brandBrandRepository
+				.findById(_modelMapperService.forRequest().map(updateBrandRequest, Brand.class).getId()).orElseThrow();
+		brand.setName(updateBrandRequest.getName());
+		_brandBrandRepository.save(brand);
+
+	}
+
+	@Override
+	public void delete(ProcessByIdBrandRequest processByIdBrandRequest) {
+		_brandBrandRepository.delete(_modelMapperService.forRequest().map(processByIdBrandRequest, Brand.class));
+	}
+
+	@Override
+	public GetDefaultBrandResponse getById(ProcessByIdBrandRequest processByIdBrandRequest) {
+		Brand brand = _brandBrandRepository.findById(processByIdBrandRequest.getId()).orElseThrow();
+		return _modelMapperService.forResponse().map(brand, GetDefaultBrandResponse.class);
+	}
+
+	@Override
+	public GetDefaultBrandResponse getByName(String name) {
+		GetDefaultBrandResponse brandResponse = _modelMapperService.forResponse()
+				.map(_brandBrandRepository.findBrandByName(name), GetDefaultBrandResponse.class);
+		return brandResponse;
 	}
 }
