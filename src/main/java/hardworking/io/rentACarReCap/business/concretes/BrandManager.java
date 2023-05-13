@@ -11,6 +11,7 @@ import hardworking.io.rentACarReCap.business.dtos.requests.ProcessByIdBrandReque
 import hardworking.io.rentACarReCap.business.dtos.requests.UpdateBrandRequest;
 import hardworking.io.rentACarReCap.business.dtos.responses.GetAllBrandsResponse;
 import hardworking.io.rentACarReCap.business.dtos.responses.GetDefaultBrandResponse;
+import hardworking.io.rentACarReCap.business.rules.BrandBusinessRules;
 import hardworking.io.rentACarReCap.core.utilities.mappers.ModelMapperService;
 import hardworking.io.rentACarReCap.dataAccess.abstracts.BrandRepository;
 import hardworking.io.rentACarReCap.entities.concretes.Brand;
@@ -21,6 +22,8 @@ import lombok.AllArgsConstructor;
 public class BrandManager implements BrandService {
 	private BrandRepository _brandBrandRepository;
 	private ModelMapperService _modelMapperService;
+	private BrandBusinessRules _businessExceptionRules;
+
 
 	@Override
 	public List<GetAllBrandsResponse> getAll() {
@@ -37,6 +40,10 @@ public class BrandManager implements BrandService {
 	@Override
 	public void add(CreateBrandRequest createBrandRequest) {
 
+		// Buraya kuralımızı yazdık ve gerekli check yaptık.
+		// Bu şekilde if - else hell kurtulduk.
+		_businessExceptionRules.checkIfBrandNameExist(createBrandRequest.getName());
+		
 		Brand brandRequest = _modelMapperService.forRequest().map(createBrandRequest, Brand.class);
 		_brandBrandRepository.save(brandRequest);
 
@@ -50,10 +57,13 @@ public class BrandManager implements BrandService {
 
 	@Override
 	public void update(UpdateBrandRequest updateBrandRequest) {
+//// 1. Yöntem
+//		Brand brand = _brandBrandRepository
+//				.findById(_modelMapperService.forRequest().map(updateBrandRequest, Brand.class).getId()).orElseThrow();
+//		brand.setName(updateBrandRequest.getName());
 
-		Brand brand = _brandBrandRepository
-				.findById(_modelMapperService.forRequest().map(updateBrandRequest, Brand.class).getId()).orElseThrow();
-		brand.setName(updateBrandRequest.getName());
+		// 2. Yöntem
+		Brand brand = _modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		_brandBrandRepository.save(brand);
 
 	}

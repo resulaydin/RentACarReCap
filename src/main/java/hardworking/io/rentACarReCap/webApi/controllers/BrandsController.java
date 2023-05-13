@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +19,7 @@ import hardworking.io.rentACarReCap.business.dtos.requests.UpdateBrandRequest;
 import hardworking.io.rentACarReCap.business.dtos.responses.GetAllBrandsResponse;
 import hardworking.io.rentACarReCap.business.dtos.responses.GetDefaultBrandResponse;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -28,7 +28,7 @@ import lombok.AllArgsConstructor;
 public class BrandsController {
 	private BrandService _brandService;
 
-	@GetMapping("getAll")
+	@GetMapping()
 	public List<GetAllBrandsResponse> getAll() {
 		return _brandService.getAll();
 	}
@@ -38,19 +38,19 @@ public class BrandsController {
 		return _brandService.getById(processByIdBrandRequest);
 	}
 
-	@GetMapping("getByName")
-	GetDefaultBrandResponse getByName(String name) {
+	@GetMapping("/{name}")
+	GetDefaultBrandResponse getByName(@PathVariable String name) {
 		return _brandService.getByName(name);
 	}
 
-	@PostMapping("add")
+	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public void add(CreateBrandRequest createBrandRequest) {
+	public void add(@RequestBody() @Valid() CreateBrandRequest createBrandRequest) {
 		_brandService.add(createBrandRequest);
 	}
 
-	@PutMapping("update")
-	void update(UpdateBrandRequest updateBrandRequest) {
+	@PutMapping
+	void update(@RequestBody() UpdateBrandRequest updateBrandRequest) {
 		_brandService.update(updateBrandRequest);
 	}
 

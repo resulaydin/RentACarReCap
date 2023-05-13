@@ -1,0 +1,26 @@
+
+
+	// Bu Sınıf injectionları yapmaktan sorumludur. Kendi nesne injection'nunu da yapabiliyor.
+	// Bu sınıf üzerinden istediğimiz bean sınıfına erişim sağlayabiliriz.
+	@Autowired
+	ApplicationContext applicationContext;
+	
+	
+	* Aşağıdaki gibi eğer yazılırsa bu yapı generic bir sınıfın metodu olduğu için Spring bunun type' nı
+	  anlamamaktadır. Bu yüzden ///AAA alanında olduğu gibi type belirtmeliyiz.
+	  
+	  		return _modelMapperService.forResponse()
+				.map(_modelRepository.findById(id), GetDefaultModelResponse.class);
+				
+				
+		///AAA
+			1- Model modelById =_modelRepository.findById(id).orElseThrow();
+				return _modelMapperService.forResponse()
+				.map(modelById, GetDefaultModelResponse.class);
+			
+			2- 
+				return _modelMapperService.forResponse()
+				.map(_modelRepository.findById(id).orElseThrow(), GetDefaultModelResponse.class);
+	
+	
+	
