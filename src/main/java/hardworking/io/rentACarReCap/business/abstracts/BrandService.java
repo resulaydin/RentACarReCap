@@ -11,8 +11,8 @@ import hardworking.io.rentACarReCap.business.dtos.responses.GetDefaultBrandRespo
 public interface BrandService {
 	
 	List<GetAllBrandsResponse> getAll();
-	void update(UpdateBrandRequest updateBrandRequest);
 	void add(CreateBrandRequest createBrandRequest);
+	void update(UpdateBrandRequest updateBrandRequest);
 	void deleteById(int id);
 	void delete(ProcessByIdBrandRequest processByIdBrandRequest);
 	GetDefaultBrandResponse getById(ProcessByIdBrandRequest processByIdBrandRequest);

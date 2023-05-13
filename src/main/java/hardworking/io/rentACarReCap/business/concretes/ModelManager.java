@@ -39,8 +39,8 @@ public class ModelManager implements ModelService {
 
 	@Override
 	public GetDefaultModelResponse getById(int id) {
-
-		return _modelMapperService.forResponse().map(_modelRepository.findById(id), GetDefaultModelResponse.class);
+		return _modelMapperService.forResponse()
+				.map(_modelRepository.findById(id).orElseThrow(), GetDefaultModelResponse.class);
 	}
 
 	@Override
@@ -51,9 +51,13 @@ public class ModelManager implements ModelService {
 
 	@Override
 	public void update(UpdateModelRequest updateModelRequest) {
-		Model model = _modelRepository.findById(updateModelRequest.getId()).orElseThrow();
-		model.setName(updateModelRequest.getName());
-		model.getBrand().setName(updateModelRequest.getBrandName());
+		// 1. Yöntem
+//		Model model = _modelRepository.findById(updateModelRequest.getId()).orElseThrow();
+//		model.setName(updateModelRequest.getName());
+//		model.getBrand().setName(updateModelRequest.getBrandName());
+		
+		
+		Model model=_modelMapperService.forRequest().map(updateModelRequest, Model.class);
 		_modelRepository.save(model);
 
 	}
